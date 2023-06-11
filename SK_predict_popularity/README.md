@@ -1,14 +1,14 @@
-# Notes on Model Training and Optimization
+# Model Training and Optimization
 
 ## Table of Contents
 
-1. Categorical Bins
-2. Binary Bins
+1. Neural Network - Categorical Bins
+2. Neural Network - Binary Bins
 3. Summary
 
 ---
 
-### Categorical Bins
+### Neural Network - Categorical Bins
 
 * I first tried converting popularity into categorical bins and predict the bin based on song characteristics. The accuracy and loss are in the summary_stats folder. I tested several different preprocessing methods and then performed hyperparameter tuning to determine the best model structure once I settled on the preprocessing.
 * I tried the iterations below:
@@ -37,7 +37,7 @@
 
 ---
 
-### Binary Bins
+### Neural Network - Binary Bins
 
 * Since changing from 4 bins to 3 bins increased the accuracy significantly, I also tried converting popularity into a binary:
     * < 60 popularity = Unpopular = 0
