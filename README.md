@@ -21,3 +21,4 @@ collaborative filtering - correlations between you and other people with things 
 - Spotify dataset
 -- K-Means to cluster songs based on characteristics and return recommendations based on an input song
 -- Neural network to figure out whether a song is likely to be popular; should take in the original input song as well as the recommendations
+-- Neural network to output a track genre depending on the characteristics given ('danceability','energy','loudness','mode','speechiness','acousticness','instrumentalness')
