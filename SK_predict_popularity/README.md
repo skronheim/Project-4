@@ -31,6 +31,7 @@
         * This decreased accuracy and increased loss
         * Still keep this, because the data is very skewed and initial accuracy could almost be the result of calling everything unpopular
     5. Normalization only on subset of columns with oversampling, 3 bins, and MinMax scaling
+        * Loudness, tempo, and duration
         * This decreased the accuracy very slightly and increased the loss slightly; moving forward the whole dataset was normalized
     6. Hyperparamerter tuning on iteration 4
         * Increased the accuracy to 66.7% with loss of 97%
@@ -53,6 +54,7 @@
         * Accuracy decreased
         * Still keep this, because the data is very skewed and initial accuracy could almost be the result of calling everything unpopular
     4. Normalization only on subset of columns with otherwise the same preprocessing as iteration 4
+        * Loudness, tempo, and duration
         * Accuracy increased
     5. Hyperparameter tuning with the iteration 4 pre-processing steps
         * Increased the accuracy
