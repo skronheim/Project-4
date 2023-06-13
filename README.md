@@ -63,10 +63,7 @@ Each model used slightly different preprocessing, as detailed below.
 * The number of artists for each song was determined, and the number of artists was binned
     * This data was used only in the popularity prediction model
     * The bins made this data categorical, so it was later encoded
-* The primary artist for each song was determined
-
-    **@Brenda - Did you use primary artist? If you didn't, just remove the bullet point above since neither I nor Carly used artist**
-
+* Combined artists and track_name into one column to create a meaningful index for the K-Means model
 * Track ID was removed
 * Duration was converted to minutes
 * Categorical data was encoded
@@ -74,22 +71,26 @@ Each model used slightly different preprocessing, as detailed below.
 * All T/F data was converted to integer type (to ensure numerical data)
 * Model-specific preprocessing:
     * Data was normalized
+        * For the K-Means model: StandardScaler was applied to the selected features first and then PCA was later applied to the scaled features to improve the clusters
         * For the popularity prediction, StandardScaler and MinMaxScaler were tested, as well as MinMaxScaler only on the Loudness, Tempo, and Duration data (the only data that was not either binary or between 0 and 1)
 
         **@Group - Add your normalization methods here; the order should be Brenda, then Sarah, then Carly to keep consistent with the proposed ppt order (K-Means -> popularity -> genre)**
 
     * The data pertaining to the target variable for the supervised learning models was manipulated
         * For the popularity prediction, popularity was binned into 2, 3, or 4 segments and encoded using the to_categorical method for the 3 and 4 bin models
+        * For the genre prediction, genre_track were encoded into numbers using genre_mapping and all columns were scaled using MinMax for values to be 0-1
 
-        **@Carly - Add any manipulations you made on the genre data here! This should include encoding each genre with a number**
-
+    * Subsets of the data that were used
+        * For the K-Means model: popularity, danceability, energy, loudness and temp were selected as features as features for the model
     * Subsets of the data were removed
         * For the popularity prediction the Artist, Album, and Track Name data was removed
+    * Subsets of the data that were used
+        * For the genre prediction: popularity, explicit, danceability, energy, loudness, mode, speechiness
 
         **@Group - Add any data you removed or kept here (whichever list is shorter); the order should be Brenda, then Sarah, then Carly to keep consistent with the proposed ppt order (K-Means -> popularity -> genre)**
-
+    
     * Further data was encoded
-        * For the popularity model, genre was binary encoded
+        * For the popularity and genre model, genre was binary encoded
 
         **@Group - Add any extra data encoding you performed here, if any (if there is none, that's fine); the order should be Brenda, then Sarah, then Carly to keep consistent with the proposed ppt order (K-Means -> popularity -> genre)**
 
@@ -97,11 +98,35 @@ Each model used slightly different preprocessing, as detailed below.
 
 ## Unsupervised (K-Means)
 
+* From the original dataset, artists and track_name were combined into one column to become the index. Popularity, danceability, energy, loudness and temp were then identified as features of the songs to be used in this model.
+* We then applied K-Means and PCA modeling to create the clusters in scatter plots.
+    1. K-Means
+       * Used inertia and k to create an elbow graph to determine appropiate number of clusters. This resulted in 4 clusters being used for this model.
+
+ ![image](https://github.com/skronheim/project-4/assets/120147552/d9275088-e34f-4abd-97b1-6fa252825b79)
+
+    * The scaled features were then assigned to clusters and plotted on scatter plots. We set x = popularity to then compare popularity to the other features.
+    * This did not show the data clusters very clearly in 2D as it appears that some of the clusters are on top of each other. A 3D model would probably better show how the clusters are formed. 
+
+![image](https://github.com/skronheim/project-4/assets/120147552/8efdf123-afdf-4a07-8a20-4c8697d663ba)
+
+    2. PCA
+     * We used the same number of compondents suggested in the above elbow curve for this model's clusters. 
+     * We reached an explained variance ratio of 95.47%.
+     * We then plotted x= PC1 and y= PC2 to achieve a more clear display of the clusters.
+
+![image](https://github.com/skronheim/project-4/assets/120147552/a5b27813-7843-4115-99ed-9939c1e8ba9f)
+
+     * We were then able to view which songs were associated with each cluster. 
+
+![image](https://github.com/skronheim/project-4/assets/120147552/79e6d525-6f8e-4db1-809e-538e8a853dae)
+
+
 ## Supervised (Neural Networks)
 
 ### Popularity Prediction
 
-* We first tried converting popularity into categorical bins and predict the bin based on song characteristics. The accuracy and loss are in the summary_stats folder. We tested several different preprocessing methods and then performed hyperparameter tuning to determine the best model structure once we settled on the preprocessing.
+* We first tried converting popularity into categorical bins and predicting the bin based on song characteristics. The accuracy and loss are in the summary_stats folder. We tested several different preprocessing methods and then performed hyperparameter tuning to determine the best model structure once we settled on the preprocessing.
 * We tried the iterations below:
     1. Standard scaler with 4 popularity bins:
         * 0 = "None" = 0
@@ -117,19 +142,30 @@ Each model used slightly different preprocessing, as detailed below.
         * Both accuracy and loss improved; accuracy increased by ~1% and loss decreased by ~2%
         * MinMax scaling was carried forward
     4. Random oversampling with 3 bins and MinMax scaling 
-        * The data is very skewed toward unpopular
+        * The data is very skewed toward unpopular (~12% 'popular' songs)
         * Oversampling was performed to reduce skew in the dataset
         * This decreased accuracy and increased loss
-        * Still maintained this preprocessing step, because the data is very skewed and initial accuracy could almost be the result of calling everything unpopular
-    5. Normalization only on subset of columns with oversampling, 3 bins, and MinMax scaling
+        * Still maintained this preprocessing step, because the data is very skewed and initial accuracy could almost be the result of calling every song unpopular
+    5. Normalization only on a subset of columns with oversampling, 3 bins, and MinMax scaling
         * Loudness, tempo, and duration were normalized
         * This decreased the accuracy very slightly and increased the loss slightly; moving forward the whole dataset was normalized
     6. Hyperparamerter tuning was performed to determine the optimal number of hidden layers and nodes in each layer with popularity binned into 3 bins, min-max scaling, random oversampling, and normalization of the full dataset
-        * A summary of accuracy and loss for each model can be found in "SK_predict_popularity/summary_stats/categorical_popularity_stats.csv"
+    ![image](SK_predict_popularity/summary_stats/final_categorical_training_accuracy.svg)
 
-* Since changing from 4 bins to 3 bins increased the accuracy significantly, we also tried converting popularity into a binary:
+    | Categorical Iteration | Loss  | Accuracy |
+    | --------------------- | ----- | -------- |
+    | 1                     | 0.828 | 0.669    |
+    | 2                     | 0.697 | 0.7      |
+    | 3                     | 0.678 | 0.71     |
+    | 4                     | 0.773 | 0.668    |
+    | 5                     | 0.763 | 0.667    |
+    | 6                     | 0.962 | 0.661    |
+
+* Overall, this categorical model did not work well, with a maximum accuracy of only 66% after the addition of random oversampling to reduce skew in the dataset
+
+* Since decreasing the number of bins from 4 to 3 increased the accuracy significantly, we also tried converting popularity into a binary:
     * < 60 popularity = Unpopular = 0
-    * > 60 popularity = Popular = 1
+    * \> 60 popularity = Popular = 1
 * With these binary bins, we tested similar iterations to those described above.
     1. StandardScaler normalization
     2. MinMaxScaler
@@ -143,13 +179,68 @@ Each model used slightly different preprocessing, as detailed below.
     4. Normalization only on subset of columns with otherwise the same preprocessing as iteration 4
         * Loudness, tempo, and duration were normalized
         * This increased the model accuracy
-    5. Hyperparameter tuning was performed to determine the optimal number of hidden layers and nodes in each layer with min-max scaling, random oversampling, and normalization of only loudness, tempo, and duration
-        * A summary of accuracy and loss for each model can be found in "SK_predict_popularity/summary_stats/binary_popularity_stats.csv"
+        * Upon visualization of the training and testing accuracy throughout training, we noticed that the testing accuracy was significantly lower than the training accuracy
+            * We wondered if this was due to a problem of overfitting to the training data
+        ![image](SK_predict_popularity/summary_stats/iteration4_binary_training_accuracy.svg)
+    5. Model optimization to reduce overfitting
+        * The number of nodes in the hidden layers of the model were decreased and a regularizer was added to see whether this could reduce overfitting and increase the testing accuracy
+        * This decreased the overall accuracy, though it did move the testing accuracy closer to the training accuracy
+        * The regularizer was omitted for the final hyperparameter tuning
+        ![image](SK_predict_popularity/summary_stats/iteration5_binary_training_accuracy.svg)
+    6. Hyperparameter tuning was performed to determine the optimal number of hidden layers and nodes in each layer with min-max scaling, random oversampling, and normalization of only loudness, tempo, and duration 
+    ![image](SK_predict_popularity/summary_stats/final_binary_training_accuracy.svg)
+
+    | Binary Iteration | Loss  | Accuracy |
+    | ---------------- | ----- | -------- |
+    | 1                | 0.348 | 0.866    |
+    | 2                | 0.327 | 0.88     |
+    | 3                | 0.549 | 0.776    |
+    | 4                | 0.531 | 0.796    |
+    | 5                | 0.605 | 0.683    |
+    | 6                | 0.778 | 0.838    |
 
 ### Genre Prediction
 
+* We first tried binning the genre_tracks into 6 different bins based on their alphabetical order, but that did nto give us the outcome of a specific genre a song would be predicted to have beased on the popularity, explicit, danceability, energy, loudness, mode, speechiness characertsitics. The accuracy and loss are in Genre_Model folder under the file 4 Making predictions. We tested several different preprocessing methods such as logistic regression and neural networks to see which will accruately predict the genre better.
+* We tried the iterations below:
+    1. Binning Genre_track into 6 bins:
+        * Bin 1: acoustic, afrobeat, alt-rock, alternative, ambient, anime, black-metal, bluegrass, blues, brazil, breakbeat, british, cantopop, chicago-house, children, chill, classical, club, and comedy
+        * Bin 2: country, dance, dancehall, death-metal, deep-house, detroit-techno, disco, disney, drum-and-bass, dub, dubstep, edm, electro, electronic, emo, folk, forro, french, and funk
+        * Bin 3: garage, german, gospel, goth, grindcore, groove, grunge, guitar, happy, hard-rock, hardcore, hardstyle, heavy-metal, hip-hop, honky-tonk, house, idm, indian, and indie-pop
+        * Bin 4: indie, industrial, iranian, j-dance, j-idol, j-pop, j-rock, jazz, k-pop, kids, latin, latino, malay, mandopop, metal, metalcore, minimal-techno, mpb, and new-age
+        * Bin 5: opera, pagode, party,piano, pop-film, pop, power-pop, progressive-house, psych-rock, punk-rock, punk, r-n-b, reggae, reggaeton, rock-n-roll, rock, rockabilly, romance, and sad
+        * Bin 6: salsa, samba, sertanejo, show-tunes, singer-songwriter, ska, sleep, songwriter, soul, spanish, study, swedish, synth-pop, tango, techno, trance, trip-hop, turkish, world-music,
+    2. Genre encoder using genre_mapping:
+        * acoustic,0
+        * afrobeat,1
+        * alt-rock,2
+        * alternative,3
+        * ambient,4
+        * anime,5
+        * black-metal,6
+        * bluegrass,7
+        * ...
+        * synth-pop,107
+        * tango,108
+        * techno,109
+        * trance,110
+        * trip-hop,111
+        * turkish,112
+        * world-music,113
+    3. Min-max scaler for 
+        * popularity
+        * loudness
+
+* With the encoded genre_track, we tested these iterations
+    1. Whether it was multiclass or multilabel
+    2. Training the neural network model with mutiple layers using "Dense" as iterations of 50, 100, 200, and 300
+    3. Increasing the Epoch which slowed the learning, but improved the accuracy
+
+
 # Summary
 
-In terms of popularity predictions, a neural network model is able to predict the binary popular vs unpopular categories relatively well, with a final accuracy of ~83%. However, the model is significantly less accurate the more segments the popularity is split into, with accuracy of only 67% with four bins and 71% with three bins (before the addition of random oversampling, such that these accuracy scores may be too high). Random oversampling in all cases decreased the model accuracy. However only 12% of the songs were labeled with popularity > 60, so the higher accuracy may not be fully representative without the oversampling. Overall while we were able to build a relatively accurate model to predict the popularity of a song based on its characteristics, this dataset does not support this prediction very well due to how skewed the dataset is toward 'unpopular' songs. This may be a problem with this specific dataset, that the inclusion of more songs may improve, or it may be a problem with Spotify's measure of popularity (perhaps popularity is very stringent, such that very few songs are actually marked as popular). 
+In terms of the K-Means model, the PCA model was better able to create clusters using the selected features with a 95% explained variance ratio. It would be interesting to see what a 3D version of the K-means clusters would look like and if that would better show the clusters. While the PCA model shows 4 fairly distinct clusters, further examination of the songs within these clusters would need to be conducted to better understand how the songs in each cluster are connected. It would also be interesting to redue these models including Track_gene in the features or simply comparing popularity to Track_gene.
 
-**@Group - we'll want to tie everything together here, and I can't fully do so without your data/ analysis. Brenda - you'll want to say something to summarize your KMeans; Carly, you'll want to say something along the lines of 'this data does not support genre prediction very well and here's a possibility as to why'. My material is here, but will need to be fit into whatever you two have to say**
+In terms of popularity predictions, a neural network model is able to predict the binary popular vs unpopular categories relatively well, with a final accuracy of ~83%. However, the model is significantly less accurate the more segments the popularity is split into, with accuracy of only 67% with four bins and 71% with three bins (before the addition of random oversampling, such that these accuracy scores may be too high). Random oversampling in all cases decreased the model accuracy. However only 12% of the songs were labeled with popularity > 60, so the higher accuracy may not be fully representative without the oversampling. Our attempt to compensate for any potential model overfitting through the use of regularizers did not work, so the model may be overfit to the training data. Overall while we were able to build a relatively accurate model to predict the popularity of a song based on its characteristics, this dataset does not support this prediction very well due to how skewed the dataset is toward 'unpopular' songs. This may be a problem with this specific dataset, that the inclusion of more songs may improve, or it may be a problem with Spotify's measure of popularity (perhaps popularity is very stringent, such that very few songs are actually marked as popular). 
+
+In terms of the genre predictions, the model had difficulty predicting the specific genre_track depending on the charactersitics given (popularity, explicit, danceability, energy, loudness, mode, speechiness). We could of used bins for the 114 genres of songs, but it would not pinpoint the specific genre type it would most likel be. The model outputs a genre code that represents a singular genre type, but with 30% accuracy. We think that mutiple genre types could have similar characteristics so the machine learning model had difficulty outputting one specific genre. With more time, we would of probably grouped up some genres such as cantopop, indie-pop, j-pop, k-pop, pop, power-pop, and trip-hop which have similar song characteristics. 
