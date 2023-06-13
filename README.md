@@ -150,7 +150,8 @@ Each model used slightly different preprocessing, as detailed below.
         * Loudness, tempo, and duration were normalized
         * This decreased the accuracy very slightly and increased the loss slightly; moving forward the whole dataset was normalized
     6. Hyperparamerter tuning was performed to determine the optimal number of hidden layers and nodes in each layer with popularity binned into 3 bins, min-max scaling, random oversampling, and normalization of the full dataset
-    ![image](SK_predict_popularity/summary_stats/final_categorical_training_accuracy.svg)
+
+![image](SK_predict_popularity/summary_stats/final_categorical_training_accuracy.svg)
 
     | Categorical Iteration | Loss  | Accuracy |
     | --------------------- | ----- | -------- |
@@ -181,14 +182,19 @@ Each model used slightly different preprocessing, as detailed below.
         * This increased the model accuracy
         * Upon visualization of the training and testing accuracy throughout training, we noticed that the testing accuracy was significantly lower than the training accuracy
             * We wondered if this was due to a problem of overfitting to the training data
-        ![image](SK_predict_popularity/summary_stats/iteration4_binary_training_accuracy.svg)
+
+    ![image](SK_predict_popularity/summary_stats/iteration4_binary_training_accuracy.svg)
+
     5. Model optimization to reduce overfitting
         * The number of nodes in the hidden layers of the model were decreased and a regularizer was added to see whether this could reduce overfitting and increase the testing accuracy
         * This decreased the overall accuracy, though it did move the testing accuracy closer to the training accuracy
         * The regularizer was omitted for the final hyperparameter tuning
-        ![image](SK_predict_popularity/summary_stats/iteration5_binary_training_accuracy.svg)
+
+![image](SK_predict_popularity/summary_stats/iteration5_binary_training_accuracy.svg)
+
     6. Hyperparameter tuning was performed to determine the optimal number of hidden layers and nodes in each layer with min-max scaling, random oversampling, and normalization of only loudness, tempo, and duration 
-    ![image](SK_predict_popularity/summary_stats/final_binary_training_accuracy.svg)
+    
+![image](SK_predict_popularity/summary_stats/final_binary_training_accuracy.svg)
 
     | Binary Iteration | Loss  | Accuracy |
     | ---------------- | ----- | -------- |
