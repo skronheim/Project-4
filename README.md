@@ -63,10 +63,7 @@ Each model used slightly different preprocessing, as detailed below.
 * The number of artists for each song was determined, and the number of artists was binned
     * This data was used only in the popularity prediction model
     * The bins made this data categorical, so it was later encoded
-* The primary artist for each song was determined
-
-    **@Brenda - Did you use primary artist? If you didn't, just remove the bullet point above since neither I nor Carly used artist**
-
+* Combined artists and track_name into one column to create a meaningful index for the K-Means model
 * Track ID was removed
 * Duration was converted to minutes
 * Categorical data was encoded
@@ -74,6 +71,7 @@ Each model used slightly different preprocessing, as detailed below.
 * All T/F data was converted to integer type (to ensure numerical data)
 * Model-specific preprocessing:
     * Data was normalized
+        * For the K-Means model: StandardScaler was applied to the selected features first and then PCA was later applied to the scaled features to improve the clusters
         * For the popularity prediction, StandardScaler and MinMaxScaler were tested, as well as MinMaxScaler only on the Loudness, Tempo, and Duration data (the only data that was not either binary or between 0 and 1)
 
         **@Group - Add your normalization methods here; the order should be Brenda, then Sarah, then Carly to keep consistent with the proposed ppt order (K-Means -> popularity -> genre)**
@@ -82,12 +80,13 @@ Each model used slightly different preprocessing, as detailed below.
         * For the popularity prediction, popularity was binned into 2, 3, or 4 segments and encoded using the to_categorical method for the 3 and 4 bin models
 
         **@Carly - Add any manipulations you made on the genre data here! This should include encoding each genre with a number**
-
+    * Subsets of the data that were used
+        * For the K-Means model: popularity, danceability, energy, loudness and temp were selected as features as features for the model
     * Subsets of the data were removed
         * For the popularity prediction the Artist, Album, and Track Name data was removed
 
         **@Group - Add any data you removed or kept here (whichever list is shorter); the order should be Brenda, then Sarah, then Carly to keep consistent with the proposed ppt order (K-Means -> popularity -> genre)**
-
+    
     * Further data was encoded
         * For the popularity model, genre was binary encoded
 
@@ -96,6 +95,30 @@ Each model used slightly different preprocessing, as detailed below.
 # Models
 
 ## Unsupervised (K-Means)
+
+* From the original dataset, artists and track_name were combined into one column to become the index. Popularity, danceability, energy, loudness and temp were then identified as features of the songs to be used in this model.
+* We then applied K-Means and PCA modeling to create the clusters in scatter plots.
+    1. K-Means
+       * Used inertia and k to create an elbow graph to determine appropiate number of clusters. This resulted in 4 clusters being used for this model.
+
+ ![image](https://github.com/skronheim/project-4/assets/120147552/d9275088-e34f-4abd-97b1-6fa252825b79)
+
+    * The scaled features were then assigned to clusters and plotted on scatter plots. We set x = popularity to then compare popularity to the other features.
+    * This did not show the data clusters very clearly in 2D as it appears that some of the clusters are on top of each other. A 3D model would probably better show how the clusters are formed. 
+
+![image](https://github.com/skronheim/project-4/assets/120147552/8efdf123-afdf-4a07-8a20-4c8697d663ba)
+
+    2. PCA
+     * We used the same number of compondents suggested in the above elbow curve for this model's clusters. 
+     * We reached an explained variance ratio of 95.47%.
+     * We then plotted x= PC1 and y= PC2 to achieve a more clear display of the clusters.
+
+![image](https://github.com/skronheim/project-4/assets/120147552/a5b27813-7843-4115-99ed-9939c1e8ba9f)
+
+     * We were then able to view which songs were associated with each cluster. 
+
+![image](https://github.com/skronheim/project-4/assets/120147552/79e6d525-6f8e-4db1-809e-538e8a853dae)
+
 
 ## Supervised (Neural Networks)
 
@@ -149,6 +172,8 @@ Each model used slightly different preprocessing, as detailed below.
 ### Genre Prediction
 
 # Summary
+
+In terms of the K-Means model, the PCA model was better able to create clusters using the selected features with a 95% explained variance ratio. It would be interesting to see what a 3D version of the K-means clusters would look like and if that would better show the clusters. While the PCA model shows 4 fairly distinct clusters, further examination of the songs within these clusters would need to be conducted to better understand how the songs in each cluster are connected. It would also be interesting to redue these models including Track_gene in the features or simply comparing popularity to Track_gene.
 
 In terms of popularity predictions, a neural network model is able to predict the binary popular vs unpopular categories relatively well, with a final accuracy of ~83%. However, the model is significantly less accurate the more segments the popularity is split into, with accuracy of only 67% with four bins and 71% with three bins (before the addition of random oversampling, such that these accuracy scores may be too high). Random oversampling in all cases decreased the model accuracy. However only 12% of the songs were labeled with popularity > 60, so the higher accuracy may not be fully representative without the oversampling. Overall while we were able to build a relatively accurate model to predict the popularity of a song based on its characteristics, this dataset does not support this prediction very well due to how skewed the dataset is toward 'unpopular' songs. This may be a problem with this specific dataset, that the inclusion of more songs may improve, or it may be a problem with Spotify's measure of popularity (perhaps popularity is very stringent, such that very few songs are actually marked as popular). 
 
