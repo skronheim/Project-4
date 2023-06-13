@@ -183,7 +183,7 @@ Each model used slightly different preprocessing, as detailed below.
     * Upon visualization of the training and testing accuracy throughout training, we noticed that the testing accuracy was significantly lower than the training accuracy
         * We wondered if this was due to a problem of overfitting to the training data
 
-    ![image](SK_predict_popularity/summary_stats/iteration4_binary_training_accuracy.svg)
+![image](SK_predict_popularity/summary_stats/iteration4_binary_training_accuracy.svg)
 
 5. Model optimization to reduce overfitting
     * The number of nodes in the hidden layers of the model were decreased and a regularizer was added to see whether this could reduce overfitting and increase the testing accuracy
