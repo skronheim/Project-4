@@ -90,7 +90,7 @@ Each model used slightly different preprocessing, as detailed below.
         **@Group - Add any data you removed or kept here (whichever list is shorter); the order should be Brenda, then Sarah, then Carly to keep consistent with the proposed ppt order (K-Means -> popularity -> genre)**
     
     * Further data was encoded
-        * For the popularity model, genre was binary encoded
+        * For the popularity and genre model, genre was binary encoded
 
         **@Group - Add any extra data encoding you performed here, if any (if there is none, that's fine); the order should be Brenda, then Sarah, then Carly to keep consistent with the proposed ppt order (K-Means -> popularity -> genre)**
 
