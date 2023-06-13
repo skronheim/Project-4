@@ -154,14 +154,14 @@ Each model used slightly different preprocessing, as detailed below.
 
     | Categorical Iteration | Loss  | Accuracy |
     | --------------------- | ----- | -------- |
-    | 1                     | 0.828 | 0.669    |
-    | 2                     | 0.697 | 0.7      |
-    | 3                     | 0.678 | 0.71     |
-    | 4                     | 0.773 | 0.668    |
-    | 5                     | 0.763 | 0.667    |
-    | 6                     | 0.962 | 0.661    |
+    | 1                     | 0.835 | 0.663    |
+    | 2                     | 0.693 | 0.704    |
+    | 3                     | 0.681 | 0.705    |
+    | 4                     | 0.78  | 0.663    |
+    | 5                     | 0.776 | 0.669    |
+    | 6                     | 1.154 | 0.664    |
 
-* Overall, this categorical model did not work well, with a maximum accuracy of only 66% after the addition of random oversampling to reduce skew in the dataset
+* Overall, this categorical model did not work well, with a maximum accuracy of only ~66% after the addition of random oversampling to reduce skew in the dataset
 
 * Since decreasing the number of bins from 4 to 3 increased the accuracy significantly, we also tried converting popularity into a binary:
     * < 60 popularity = Unpopular = 0
@@ -192,12 +192,12 @@ Each model used slightly different preprocessing, as detailed below.
 
     | Binary Iteration | Loss  | Accuracy |
     | ---------------- | ----- | -------- |
-    | 1                | 0.348 | 0.866    |
-    | 2                | 0.327 | 0.88     |
-    | 3                | 0.549 | 0.776    |
-    | 4                | 0.531 | 0.796    |
-    | 5                | 0.605 | 0.683    |
-    | 6                | 0.778 | 0.838    |
+    | 1                | 0.345 | 0.876    |
+    | 2                | 0.319 | 0.868    |
+    | 3                | 0.544 | 0.793    |
+    | 4                | 0.513 | 0.8      |
+    | 5                | 0.626 | 0.641    |
+    | 6                | 0.818 | 0.834    |
 
 ### Genre Prediction
 
