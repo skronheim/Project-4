@@ -237,6 +237,28 @@ Each model used slightly different preprocessing, as detailed below.
     3. Min-max scaler for 
         * popularity
         * loudness
+    4. Changed binned genres to individual mapped out genre
+        * Genre_mapping.csv shows the genres encoded with numbers from 0-113
+        * ![image](https://github.com/skronheim/project-4/assets/120132940/e7ec3a7b-a91f-43ca-9f3a-8e037583a202)
+    5. 30 columns of characteristics were used 
+        * ![image](https://github.com/skronheim/project-4/assets/120132940/4b3f6182-2a68-42aa-8b2b-5e2fb3fb8f5e)
+        * This includes: popularity, explicit, danceability, energy, loudness, mode, speechiness, acousticness, instrumentalness, liveness, valence, tempo, duration_min, time_signature_0, time_signature_1, time_signature_3,     time_signature_4, time_signature_5, key_0,key_1,key_2,key_3,key_4,key_5,key_6,key_7,key_8,key_9,key_10,key_11
+
+
+* With the encoded genre_track, we tested these iterations
+    1. Whether it was multiclass or multilabel
+    2. Training the neural network model with mutiple layers using "Dense" as iterations of 50, 100, 200, and 300
+    3. Increasing the Epoch which slowed the learning, but improved the accuracy
+    
+* Here is how the model works
+    1. Training the model with 30 columns to find the one genre code
+    ![image](https://github.com/skronheim/project-4/assets/120132940/8d22052b-8179-4772-86d5-0369514a50f1)
+    
+    2. Random generate the 30 different characteristics 
+    ![image](https://github.com/skronheim/project-4/assets/120132940/b508b2ba-0a2e-447e-83e4-ed9d93ded4ef)
+
+    3. The model will output a genre code which will be a number associated with a specific genre type
+    4. ![image](https://github.com/skronheim/project-4/assets/120132940/e801a605-7bfd-44a1-b45b-e8762a5d3358)
 
 * With the encoded genre_track, we tested these iterations
     1. Whether it was multiclass or multilabel
