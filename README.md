@@ -78,12 +78,14 @@ Each model used slightly different preprocessing, as detailed below.
 
     * The data pertaining to the target variable for the supervised learning models was manipulated
         * For the popularity prediction, popularity was binned into 2, 3, or 4 segments and encoded using the to_categorical method for the 3 and 4 bin models
+        * For the genre prediction, genre_track were encoded into numbers using genre_mapping and all columns were scaled using MinMax for values to be 0-1
 
-        **@Carly - Add any manipulations you made on the genre data here! This should include encoding each genre with a number**
     * Subsets of the data that were used
         * For the K-Means model: popularity, danceability, energy, loudness and temp were selected as features as features for the model
     * Subsets of the data were removed
         * For the popularity prediction the Artist, Album, and Track Name data was removed
+    * Subsets of the data that were used
+        * For the genre prediction: popularity, explicit, danceability, energy, loudness, mode, speechiness
 
         **@Group - Add any data you removed or kept here (whichever list is shorter); the order should be Brenda, then Sarah, then Carly to keep consistent with the proposed ppt order (K-Means -> popularity -> genre)**
     
@@ -171,10 +173,46 @@ Each model used slightly different preprocessing, as detailed below.
 
 ### Genre Prediction
 
+* We first tried binning the genre_tracks into 6 different bins based on their alphabetical order, but that did nto give us the outcome of a specific genre a song would be predicted to have beased on the popularity, explicit, danceability, energy, loudness, mode, speechiness characertsitics. The accuracy and loss are in Genre_Model folder under the file 4 Making predictions. We tested several different preprocessing methods such as logistic regression and neural networks to see which will accruately predict the genre better.
+* We tried the iterations below:
+    1. Binning Genre_track into 6 bins:
+        * Bin 1: acoustic, afrobeat, alt-rock, alternative, ambient, anime, black-metal, bluegrass, blues, brazil, breakbeat, british, cantopop, chicago-house, children, chill, classical, club, and comedy
+        * Bin 2: country, dance, dancehall, death-metal, deep-house, detroit-techno, disco, disney, drum-and-bass, dub, dubstep, edm, electro, electronic, emo, folk, forro, french, and funk
+        * Bin 3: garage, german, gospel, goth, grindcore, groove, grunge, guitar, happy, hard-rock, hardcore, hardstyle, heavy-metal, hip-hop, honky-tonk, house, idm, indian, and indie-pop
+        * Bin 4: indie, industrial, iranian, j-dance, j-idol, j-pop, j-rock, jazz, k-pop, kids, latin, latino, malay, mandopop, metal, metalcore, minimal-techno, mpb, and new-age
+        * Bin 5: opera, pagode, party,piano, pop-film, pop, power-pop, progressive-house, psych-rock, punk-rock, punk, r-n-b, reggae, reggaeton, rock-n-roll, rock, rockabilly, romance, and sad
+        * Bin 6: salsa, samba, sertanejo, show-tunes, singer-songwriter, ska, sleep, songwriter, soul, spanish, study, swedish, synth-pop, tango, techno, trance, trip-hop, turkish, world-music,
+    2. Genre encoder using genre_mapping:
+        * acoustic,0
+        * afrobeat,1
+        * alt-rock,2
+        * alternative,3
+        * ambient,4
+        * anime,5
+        * black-metal,6
+        * bluegrass,7
+        * ...
+        * synth-pop,107
+        * tango,108
+        * techno,109
+        * trance,110
+        * trip-hop,111
+        * turkish,112
+        * world-music,113
+    3. Min-max scaler for 
+        * popularity
+        * loudness
+
+* With the encoded genre_track, we tested these iterations
+    1. Whether it was multiclass or multilabel
+    2. Training the neural network model with mutiple layers using "Dense" as iterations of 50, 100, 200, and 300
+    3. Increasing the Epoch which slowed the learning, but improved the accuracy
+
+
 # Summary
 
 In terms of the K-Means model, the PCA model was better able to create clusters using the selected features with a 95% explained variance ratio. It would be interesting to see what a 3D version of the K-means clusters would look like and if that would better show the clusters. While the PCA model shows 4 fairly distinct clusters, further examination of the songs within these clusters would need to be conducted to better understand how the songs in each cluster are connected. It would also be interesting to redue these models including Track_gene in the features or simply comparing popularity to Track_gene.
 
 In terms of popularity predictions, a neural network model is able to predict the binary popular vs unpopular categories relatively well, with a final accuracy of ~83%. However, the model is significantly less accurate the more segments the popularity is split into, with accuracy of only 67% with four bins and 71% with three bins (before the addition of random oversampling, such that these accuracy scores may be too high). Random oversampling in all cases decreased the model accuracy. However only 12% of the songs were labeled with popularity > 60, so the higher accuracy may not be fully representative without the oversampling. Overall while we were able to build a relatively accurate model to predict the popularity of a song based on its characteristics, this dataset does not support this prediction very well due to how skewed the dataset is toward 'unpopular' songs. This may be a problem with this specific dataset, that the inclusion of more songs may improve, or it may be a problem with Spotify's measure of popularity (perhaps popularity is very stringent, such that very few songs are actually marked as popular). 
 
-**@Group - we'll want to tie everything together here, and I can't fully do so without your data/ analysis. Brenda - you'll want to say something to summarize your KMeans; Carly, you'll want to say something along the lines of 'this data does not support genre prediction very well and here's a possibility as to why'. My material is here, but will need to be fit into whatever you two have to say**
+In terms of the genre predictions, the model had difficulty predicting the specific genre_track depending on the charactersitics given (popularity, explicit, danceability, energy, loudness, mode, speechiness). We could of used bins for the 114 genres of songs, but it would not pinpoint the specific genre type it would most likel be. The model outputs a genre code that represents a singular genre type, but with 22% accuracy. We think that mutiple genre types could have similar characteristics so the machine learning model had difficulty outputting one specific genre. With more time, we would of probably grouped up some genres such as cantopop, indie-pop, j-pop, k-pop, pop, power-pop, and trip-hop which have similar song characteristics. 
