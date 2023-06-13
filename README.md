@@ -128,28 +128,28 @@ Each model used slightly different preprocessing, as detailed below.
 
 * We first tried converting popularity into categorical bins and predicting the bin based on song characteristics. The accuracy and loss are in the summary_stats folder. We tested several different preprocessing methods and then performed hyperparameter tuning to determine the best model structure once we settled on the preprocessing.
 * We tried the iterations below:
-    1. Standard scaler with 4 popularity bins:
-        * 0 = "None" = 0
-        * 0 < popularity <= 30 = "Low" = 1
-        * 30 < popularity <= 60 = "Medium" = 2
-        * popularity > 60 = "High" = 3
-    2. Standard scaler with 3 popularity bins:
-        * popularity <= 30 = "Low" = 0
-        * 30 < popularity <= 60= "Medium" = 1
-        * popularity > 60 = "High" = 2
-        * The 3-bin model improves the accuracy and decreases the loss, so 3-bin was carried forward
-    3. Min-max scaler with 3 popularity bins
-        * Both accuracy and loss improved; accuracy increased by ~1% and loss decreased by ~2%
-        * MinMax scaling was carried forward
-    4. Random oversampling with 3 bins and MinMax scaling 
-        * The data is very skewed toward unpopular (~12% 'popular' songs)
-        * Oversampling was performed to reduce skew in the dataset
-        * This decreased accuracy and increased loss
-        * Still maintained this preprocessing step, because the data is very skewed and initial accuracy could almost be the result of calling every song unpopular
-    5. Normalization only on a subset of columns with oversampling, 3 bins, and MinMax scaling
-        * Loudness, tempo, and duration were normalized
-        * This decreased the accuracy very slightly and increased the loss slightly; moving forward the whole dataset was normalized
-    6. Hyperparamerter tuning was performed to determine the optimal number of hidden layers and nodes in each layer with popularity binned into 3 bins, min-max scaling, random oversampling, and normalization of the full dataset
+1. Standard scaler with 4 popularity bins:
+    * 0 = "None" = 0
+    * 0 < popularity <= 30 = "Low" = 1
+    * 30 < popularity <= 60 = "Medium" = 2
+    * popularity > 60 = "High" = 3
+2. Standard scaler with 3 popularity bins:
+    * popularity <= 30 = "Low" = 0
+    * 30 < popularity <= 60= "Medium" = 1
+    * popularity > 60 = "High" = 2
+    * The 3-bin model improves the accuracy and decreases the loss, so 3-bin was carried forward
+3. Min-max scaler with 3 popularity bins
+    * Both accuracy and loss improved; accuracy increased by ~1% and loss decreased by ~2%
+    * MinMax scaling was carried forward
+4. Random oversampling with 3 bins and MinMax scaling 
+    * The data is very skewed toward unpopular (~12% 'popular' songs)
+    * Oversampling was performed to reduce skew in the dataset
+    * This decreased accuracy and increased loss
+    * Still maintained this preprocessing step, because the data is very skewed and initial accuracy could almost be the result of calling every song unpopular
+5. Normalization only on a subset of columns with oversampling, 3 bins, and MinMax scaling
+    * Loudness, tempo, and duration were normalized
+    * This decreased the accuracy very slightly and increased the loss slightly; moving forward the whole dataset was normalized
+6. Hyperparamerter tuning was performed to determine the optimal number of hidden layers and nodes in each layer with popularity binned into 3 bins, min-max scaling, random oversampling, and normalization of the full dataset
 
 ![image](SK_predict_popularity/summary_stats/final_categorical_training_accuracy.svg)
 
@@ -168,31 +168,32 @@ Each model used slightly different preprocessing, as detailed below.
     * < 60 popularity = Unpopular = 0
     * \> 60 popularity = Popular = 1
 * With these binary bins, we tested similar iterations to those described above.
-    1. StandardScaler normalization
-    2. MinMaxScaler
-        * Accuracy increased slightly while loss decreased slightly
-        * we switched to MinMax scaling for normalization
-    3. Random oversampling with MinMax scaling
-        * The data is very skewed toward unpopular
-        * Added random oversampling to account for the skew 
-        * Accuracy decreased
-        * Still maintained random oversampling, because the data is very skewed and initial accuracy could almost be the result of calling everything unpopular
-    4. Normalization only on subset of columns with otherwise the same preprocessing as iteration 4
-        * Loudness, tempo, and duration were normalized
-        * This increased the model accuracy
-        * Upon visualization of the training and testing accuracy throughout training, we noticed that the testing accuracy was significantly lower than the training accuracy
-            * We wondered if this was due to a problem of overfitting to the training data
+1. StandardScaler normalization
+2. MinMaxScaler
+    * Accuracy increased slightly while loss decreased slightly
+    * We switched to MinMax scaling for normalization
+3. Random oversampling with MinMax scaling
+    * The data is very skewed toward unpopular
+    * Added random oversampling to account for the skew 
+    * Accuracy decreased
+    * Still maintained random oversampling, because the data is very skewed and initial accuracy could almost be the result of calling everything unpopular
+4. Normalization only on subset of columns with otherwise the same preprocessing as iteration 4
+    * Loudness, tempo, and duration were normalized
+    * This increased the model accuracy
+    * Upon visualization of the training and testing accuracy throughout training, we noticed that the testing accuracy was significantly lower than the training accuracy
+        * We wondered if this was due to a problem of overfitting to the training data
 
     ![image](SK_predict_popularity/summary_stats/iteration4_binary_training_accuracy.svg)
 
-    5. Model optimization to reduce overfitting
-        * The number of nodes in the hidden layers of the model were decreased and a regularizer was added to see whether this could reduce overfitting and increase the testing accuracy
-        * This decreased the overall accuracy, though it did move the testing accuracy closer to the training accuracy
-        * The regularizer was omitted for the final hyperparameter tuning
+5. Model optimization to reduce overfitting
+    * The number of nodes in the hidden layers of the model were decreased and a regularizer was added to see whether this could reduce overfitting and increase the testing accuracy
+    * This decreased the overall accuracy, though it did move the testing accuracy closer to the training accuracy
+    * The regularizer was omitted for the final hyperparameter tuning
 
 ![image](SK_predict_popularity/summary_stats/iteration5_binary_training_accuracy.svg)
 
-    6. Hyperparameter tuning was performed to determine the optimal number of hidden layers and nodes in each layer with min-max scaling, random oversampling, and normalization of only loudness, tempo, and duration 
+6. Hyperparameter tuning was performed to determine the optimal number of hidden layers and nodes in each layer with min-max scaling, random oversampling, and normalization of only loudness, tempo, and duration 
+    * This increases the accuracy as much as possible with the addition of oversampling
     
 ![image](SK_predict_popularity/summary_stats/final_binary_training_accuracy.svg)
 
