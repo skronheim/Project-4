@@ -55,8 +55,6 @@ This dataset was downloaded from Kaggle, and consists of data collected using th
 
 # Data Preprocessing
 
-**@Group - Please add any preprocessing you did for your models that were not done in my data cleaning notebook, and read over the data processing section in general! I have pointed out a few areas that need your input in particular below**
-
 Each model used slightly different preprocessing, as detailed below. 
 * Duplicate songs were removed
 * Songs with a duration of <= 0 were removed
@@ -73,8 +71,7 @@ Each model used slightly different preprocessing, as detailed below.
     * Data was normalized
         * For the K-Means model: StandardScaler was applied to the selected features first and then PCA was later applied to the scaled features to improve the clusters
         * For the popularity prediction, StandardScaler and MinMaxScaler were tested, as well as MinMaxScaler only on the Loudness, Tempo, and Duration data (the only data that was not either binary or between 0 and 1)
-
-        **@Group - Add your normalization methods here; the order should be Brenda, then Sarah, then Carly to keep consistent with the proposed ppt order (K-Means -> popularity -> genre)**
+        * For the genre prediction, StandardScaler and MinMaxScaler were tested for all values to be 0-1, as well as MinMaxScaler only on the Loudness, Tempo, and Duration data
 
     * The data pertaining to the target variable for the supervised learning models was manipulated
         * For the popularity prediction, popularity was binned into 2, 3, or 4 segments and encoded using the to_categorical method for the 3 and 4 bin models
@@ -86,13 +83,9 @@ Each model used slightly different preprocessing, as detailed below.
         * For the popularity prediction the Artist, Album, and Track Name data was removed
     * Subsets of the data that were used
         * For the genre prediction: popularity, explicit, danceability, energy, loudness, mode, speechiness
-
-        **@Group - Add any data you removed or kept here (whichever list is shorter); the order should be Brenda, then Sarah, then Carly to keep consistent with the proposed ppt order (K-Means -> popularity -> genre)**
     
     * Further data was encoded
         * For the popularity and genre model, genre was binary encoded
-
-        **@Group - Add any extra data encoding you performed here, if any (if there is none, that's fine); the order should be Brenda, then Sarah, then Carly to keep consistent with the proposed ppt order (K-Means -> popularity -> genre)**
 
 # Models
 
@@ -239,9 +232,13 @@ Each model used slightly different preprocessing, as detailed below.
         * loudness
     4. Changed binned genres to individual mapped out genre
         * Genre_mapping.csv shows the genres encoded with numbers from 0-113
+
 ![image](https://github.com/skronheim/project-4/assets/120132940/e7ec3a7b-a91f-43ca-9f3a-8e037583a202)
+
     5. 30 columns of characteristics were used 
+
 ![image](https://github.com/skronheim/project-4/assets/120132940/4b3f6182-2a68-42aa-8b2b-5e2fb3fb8f5e)
+
         * This includes: popularity, explicit, danceability, energy, loudness, mode, speechiness, acousticness, instrumentalness, liveness, valence, tempo, duration_min, time_signature_0, time_signature_1, time_signature_3,     time_signature_4, time_signature_5, key_0,key_1,key_2,key_3,key_4,key_5,key_6,key_7,key_8,key_9,key_10,key_11
 
 
@@ -252,12 +249,15 @@ Each model used slightly different preprocessing, as detailed below.
     
 * Here is how the model works
     1. Training the model with 30 columns to find the one genre code
+
 ![image](https://github.com/skronheim/project-4/assets/120132940/625aa70d-cb31-432f-85e5-a5b39ee07bf2)
     
     2. Random generate the 30 different characteristics 
+
 ![image](https://github.com/skronheim/project-4/assets/120132940/b508b2ba-0a2e-447e-83e4-ed9d93ded4ef)
 
     3. The model will output a genre code which will be a number associated with a specific genre type
+
 ![image](https://github.com/skronheim/project-4/assets/120132940/e801a605-7bfd-44a1-b45b-e8762a5d3358)
 
 * With the encoded genre_track, we tested these iterations
