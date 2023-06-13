@@ -252,7 +252,7 @@ Each model used slightly different preprocessing, as detailed below.
     
 * Here is how the model works
     1. Training the model with 30 columns to find the one genre code
-![image](https://github.com/skronheim/project-4/assets/120132940/8d22052b-8179-4772-86d5-0369514a50f1)
+![image](https://github.com/skronheim/project-4/assets/120132940/625aa70d-cb31-432f-85e5-a5b39ee07bf2)
     
     2. Random generate the 30 different characteristics 
 ![image](https://github.com/skronheim/project-4/assets/120132940/b508b2ba-0a2e-447e-83e4-ed9d93ded4ef)
