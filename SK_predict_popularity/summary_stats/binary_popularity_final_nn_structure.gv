@@ -178,7 +178,7 @@ Input Layer (+32)"
 	subgraph cluster_1 {
 		color=white
 		rank=same
-		label=" (+110)" labeljust=right labelloc=b
+		label=" (+90)" labeljust=right labelloc=b
 		11 [color="#3498db" fontcolor="#3498db" shape=circle style=filled]
 		12 [color="#3498db" fontcolor="#3498db" shape=circle style=filled]
 		13 [color="#3498db" fontcolor="#3498db" shape=circle style=filled]
@@ -293,7 +293,7 @@ Input Layer (+32)"
 	subgraph cluster_2 {
 		color=white
 		rank=same
-		label=" (+60)" labeljust=right labelloc=b
+		label=" (+80)" labeljust=right labelloc=b
 		21 [color="#3498db" fontcolor="#3498db" shape=circle style=filled]
 		22 [color="#3498db" fontcolor="#3498db" shape=circle style=filled]
 		23 [color="#3498db" fontcolor="#3498db" shape=circle style=filled]
@@ -408,7 +408,7 @@ Input Layer (+32)"
 	subgraph cluster_3 {
 		color=white
 		rank=same
-		label=" (+80)" labeljust=right labelloc=b
+		label=" (+60)" labeljust=right labelloc=b
 		31 [color="#3498db" fontcolor="#3498db" shape=circle style=filled]
 		32 [color="#3498db" fontcolor="#3498db" shape=circle style=filled]
 		33 [color="#3498db" fontcolor="#3498db" shape=circle style=filled]
